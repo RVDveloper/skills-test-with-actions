@@ -1,32 +1,27 @@
-name: CI
+name: CI Workflow
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
-      
-      # Additional steps go here
+      # 1. Checkout del código
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # this block to run markdown linting:
+      # 2. Instalar las dependencias del proyecto
+      - name: Install dependencies
+        run: npm install
+
+      # 3. Instalar remark-cli y remark-preset-lint-consistent si no están en package.json
+      - name: Install remark-cli and remark-preset-lint-consistent
+        run: npm install remark-cli remark-preset-lint-consistent --save-dev
+
+      # 4. Ejecutar linting de los archivos Markdown
       - name: Run markdown lint
-        run: |
-          npx remark . --use remark-preset-lint-consistent
-
+        run: npx remark . --use remark-preset-lint-consistent --frail
