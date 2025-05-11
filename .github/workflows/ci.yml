@@ -1,4 +1,4 @@
-name: CI Workflow
+name: CI
 
 on:
   pull_request:
@@ -6,22 +6,14 @@ on:
       - main
 
 jobs:
-  build:
+  markdown-lint:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout del código
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Instalar las dependencias del proyecto
-      - name: Install dependencies
-        run: npm install
-
-      # 3. Instalar remark-cli y remark-preset-lint-consistent si no están en package.json
-      - name: Install remark-cli and remark-preset-lint-consistent
-        run: npm install remark-cli remark-preset-lint-consistent --save-dev
-
-      # 4. Ejecutar linting de los archivos Markdown
-      - name: Run markdown lint
-        run: npx remark . --use remark-preset-lint-consistent --frail
+      - name: Markdown Lint
+        uses: docker://avtodev/markdown-lint:v1
+        with:
+          args: /github/workspace
